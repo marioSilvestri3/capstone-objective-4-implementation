@@ -13,9 +13,18 @@ def load_data():
     return dataframe
 
 
+with st.form("prediction"):
+    select_senior = st.selectbox(
+        "Senior Citizen?",
+        ("Yes", "No"))
+
+    submitted = st.form_submit_button("Predict")
+    if submitted:
+        st.write("Senior Citizen", select_senior)
+
+
 # Drop Unimportant Columns
 df = load_data().drop(columns=['LoyaltyID', 'Customer ID', 'Total Charges'])
-
 
 # Contract Length Histogram
 slice_df = df[['Churn', 'Contract']]
@@ -45,7 +54,7 @@ X = pd.get_dummies(X, columns=['Senior Citizen', 'Partner', 'Dependents',
                                'Online Backup', 'Device Protection',
                                'Tech Support', 'Streaming TV',
                                'Streaming Movies', 'Contract',
-                               'Paperless Billing', 'Payment Method',])
+                               'Paperless Billing', 'Payment Method', ])
 y = df['Churn']
 y = pd.get_dummies(y)
 model = LinearRegression(n_jobs=10)
