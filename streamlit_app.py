@@ -1,30 +1,15 @@
 import streamlit as st
-import pandas as pd
 import plotly.express as px
-from sklearn.linear_model import LinearRegression
+from functions import prepped_data, mlr_fig
+from sidebar import sidebar
 
 st.title('Customer Churn Dashboard')
 
+# Prediction Sidebar
+sidebar()
 
-@st.cache
-def load_data():
-    dataframe = pd.read_csv('https://raw.githubusercontent.com/mariosilvestri3/capstone'
-                            '/bf1edf1b098c856b49eaf32e6832c91ff891bd74/data/customer-churn-raw.csv')
-    return dataframe
-
-
-with st.form("prediction"):
-    select_senior = st.selectbox(
-        "Senior Citizen?",
-        ("Yes", "No"))
-
-    submitted = st.form_submit_button("Predict")
-    if submitted:
-        st.write("Senior Citizen", select_senior)
-
-
-# Drop Unimportant Columns
-df = load_data().drop(columns=['LoyaltyID', 'Customer ID', 'Total Charges'])
+# Load Data
+df = prepped_data()
 
 # Contract Length Histogram
 slice_df = df[['Churn', 'Contract']]
@@ -41,33 +26,5 @@ slice_df = df[['Churn', 'Payment Method']]
 fig = px.histogram(slice_df, x='Payment Method', barmode='stack', color='Churn', height=400)
 st.plotly_chart(fig, use_container_width=True)
 
-# Monthly Charges Histogram
-slice_df = df[['Churn', 'Monthly Charges']]
-fig = px.histogram(slice_df, x='Monthly Charges', color='Churn', nbins=12, height=600)
-st.plotly_chart(fig, use_container_width=True)
-
-# Multiple Linear Regression Model
-X = df.drop(columns=['Churn'])
-X = pd.get_dummies(X, columns=['Senior Citizen', 'Partner', 'Dependents',
-                               'Phone Service', 'Multiple Lines',
-                               'Internet Service', 'Online Security',
-                               'Online Backup', 'Device Protection',
-                               'Tech Support', 'Streaming TV',
-                               'Streaming Movies', 'Contract',
-                               'Paperless Billing', 'Payment Method', ])
-y = df['Churn']
-y = pd.get_dummies(y)
-model = LinearRegression(n_jobs=10)
-model.fit(X, y)
-
 # Multiple Linear Regression Chart
-colors = ['Positive' if c > 0 else 'Negative' for c in model.coef_[1]]
-
-fig = px.bar(y=X.columns, x=model.coef_[1], color=colors,
-             color_discrete_map={'Negative': 'blue', 'Positive': 'red'},
-             title="Correlation of feature to churn",
-             orientation='h', labels=(dict(x='Correlation', y='Feature')),
-             height=900, width=800)
-fig.update_yaxes(categoryorder='total ascending', type='category')
-fig.update_layout(legend=dict(orientation='h', yanchor='top', y=1.05, x=1, xanchor='right'))
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(mlr_fig(), use_container_width=True)
