@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.express as px
-from functions import prepped_data, mlr_fig
+from functions import semi_raw_data, mlr_fig
 from sidebar import sidebar
 
 st.title('Customer Churn Dashboard')
@@ -9,7 +9,7 @@ st.title('Customer Churn Dashboard')
 sidebar()
 
 # Load Data
-df = prepped_data()
+df = semi_raw_data()
 
 # Contract Length Histogram
 slice_df = df[['Churn', 'Contract']]

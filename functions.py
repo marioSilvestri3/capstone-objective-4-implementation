@@ -5,7 +5,6 @@ import streamlit as st
 from sklearn.linear_model import LogisticRegression, LinearRegression
 
 
-@st.cache
 def prepped_data() -> pd.DataFrame:
     df = pd.read_csv('https://raw.githubusercontent.com'
                      '/mariosilvestri3/capstone-objectives-1-2-3'
@@ -23,26 +22,26 @@ def semi_raw_data() -> pd.DataFrame:
 
 
 @st.cache
-def logr_model():
-    model = LogisticRegression()
+def model():
     df = prepped_data()
-    y = pd.get_dummies(df['Churn'], drop_first=True)
-    X = pd.get_dummies(df.drop(columns=['Churn']), drop_first=True)
-    return model.fit(X, np.ravel(y))
+    _model = LogisticRegression()
+    y = df['Churn_Yes']
+    X = df.drop(columns=['Churn_Yes'])
+    _model.fit(X, np.ravel(y))
+    return _model
 
 
-@st.cache
-def predict(X_row):
-    df = pd.concat(prepped_data()[:50], X_row).reset_index(drop=True)
-    X = pd.get_dummies(df.drop(columns=['Churn']), drop_first=True)
-    return logr_model().predict(X.iloc[-1, :])
+def predict(X_data):
+    df = pd.DataFrame.from_dict(X_data)
+    print(model().predict(df)[0])
+    return model().predict(df)[0]
 
 
 @st.cache
 def mlr_fig():
     df = semi_raw_data()
     X = df.drop(columns=['Churn'])
-    # Feature Engineering is used here to encode categorical data as numerical data.
+    # Encode categorical data as numerical data.
     X = pd.get_dummies(X, columns=['Senior Citizen', 'Partner', 'Dependents',
                                    'Phone Service', 'Multiple Lines',
                                    'Internet Service', 'Online Security',
