@@ -2,14 +2,12 @@ import streamlit as st
 import pandas as pd
 from functions import predict
 
-keys = ['security', 'backup', 'protection', 'tech', 'tv', 'movies']
-
-internet_error = None
+keys = ['security', 'backup', 'protection', 'support', 'tv', 'movies']
 
 
 def sidebar():
     with st.sidebar.form('prediction'):
-        st.text('Churn Prediction Query')
+        st.subheader('Churn Prediction Query')
 
         select_senior = st.radio(
             'Senior Citizen', (
@@ -168,6 +166,6 @@ def sidebar():
 
             prediction = int(predict(X_row))
 
-            markdown = '**Churn**' if prediction else '**Won\'t Churn**'
+            markdown = 'Prediction: ' + ('**Churn**' if prediction else '**Won\'t Churn**')
 
             prediction_box = st.markdown(markdown)
