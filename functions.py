@@ -6,19 +6,25 @@ from sklearn.linear_model import LogisticRegression, LinearRegression
 
 
 def prepped_data() -> pd.DataFrame:
-    df = pd.read_csv('https://raw.githubusercontent.com'
-                     '/mariosilvestri3/capstone-objectives-1-2-3'
-                     '/main/customer-churn-prepped.csv')
-    return df
+    try:
+        df = pd.read_csv('https://raw.githubusercontent.com'
+                         '/mariosilvestri3/capstone-objectives-1-2-3'
+                         '/main/customer-churn-prepped.csv')
+        return df
+    except:
+        st.exception('Error fetching prepped data')
 
 
 @st.cache
 def semi_raw_data() -> pd.DataFrame:
-    df = pd.read_csv('https://raw.githubusercontent.com'
-                     '/mariosilvestri3/capstone-objectives-1-2-3'
-                     '/main/customer-churn-raw.csv')
-    df = df.drop(columns=['LoyaltyID', 'Customer ID', 'Total Charges'])
-    return df
+    try:
+        df = pd.read_csv('https://raw.githubusercontent.com'
+                         '/mariosilvestri3/capstone-objectives-1-2-3'
+                         '/main/customer-churn-raw.csv')
+        df = df.drop(columns=['LoyaltyID', 'Customer ID', 'Total Charges'])
+        return df
+    except:
+        st.exception('Error fetching raw data')
 
 
 @st.cache
