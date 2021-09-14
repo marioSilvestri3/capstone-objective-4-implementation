@@ -5,5 +5,5 @@
 
 ### Dashboard Implementation
 
-#### Deployed Implemenation Web App
+#### Deployed Implementation Web App
 https://share.streamlit.io/mariosilvestri3/capstone-objective-4-implementation/main
